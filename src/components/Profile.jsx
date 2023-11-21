@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import {
   Box,
@@ -17,8 +17,17 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 export default function Profile() {
   const toast = useToast();
   const AuthCtx = useContext(AuthContext);
-  const nameRef = useRef();
-  const urlRef = useRef();
+  const [name, setName] = useState("");
+  const [profileURL, setProfileURL] = useState("");
+
+  const nameUpdateHandler = (e) => {
+    setName(e.target.value);
+  };
+
+  const profileUpdateHandler = (e) => {
+    setProfileURL(e.target.value);
+  };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
@@ -48,17 +57,38 @@ export default function Profile() {
       }
     }
   };
+
+  useEffect(() => {
+    async function prefillUserData() {
+      try {
+        const response = await axios.post(
+          `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
+          {
+            idToken: AuthCtx.idToken,
+          }
+        );
+        if (response.status == 200) {
+          const userData = response.data.users[0];
+          setName(userData.displayName);
+          setProfileURL(userData.photoUrl);
+        }
+      } catch (error) {
+        console.log(error.response.data.error.message);
+      }
+    }
+    prefillUserData();
+  });
   return (
     <Box p={4} alignItems={"center"}>
       <Heading size={"md"}>Contact Details</Heading>
       <Flex pb={"1rem"}>
         <FormControl>
           <FormLabel>Full Name</FormLabel>
-          <Input type="email" ref={nameRef} />
+          <Input type="email" value={name} onChange={nameUpdateHandler} />
         </FormControl>
         <FormControl>
           <FormLabel>Profile Photo URL</FormLabel>
-          <Input type="email" ref={urlRef} />
+          <Input type="email" value={profileURL} onChange={profileUpdateHandler} />
         </FormControl>
       </Flex>
       <Button onClick={submitHandler}>Update</Button>
