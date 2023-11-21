@@ -47,6 +47,7 @@ export default function Login() {
           status: "success",
           title: "You signed up! Please login",
         });
+        localStorage.setItem("idToken", response.data.idToken);
         AuthCtx.AuthStateUpdater(response.data.idToken);
         navigate("/home");
       }

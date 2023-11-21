@@ -8,6 +8,15 @@ export default function AuthProvider(props) {
     AuthStateUpdater: AuthStateUpdater,
   });
 
+  useEffect(() => {
+    (function () {
+      const localIdToken = localStorage.getItem("idToken");
+      if (localIdToken) {
+        AuthStateUpdater(localIdToken);
+      }
+    })();
+  });
+
   function AuthStateUpdater(idToken) {
     const newState = { ...state };
     newState.idToken = idToken;
