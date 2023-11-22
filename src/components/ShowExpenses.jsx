@@ -3,8 +3,8 @@ import axios from "axios";
 import * as Chakra from "@chakra-ui/react";
 import { ExpensesContext } from "../context/ExpenseContext";
 
-// import DeleteExpense from "./DeleteExpense";
-// import EditExpense from "./EditExpense";
+import DeleteExpense from "./DeleteExpense";
+import EditExpense from "./EditExpense";
 
 export default function ShowExpenses() {
   const ExpenseCtx = useContext(ExpensesContext);
@@ -76,16 +76,16 @@ export default function ShowExpenses() {
                 <Chakra.Td>{expenses[key].amount}</Chakra.Td>
                 <Chakra.Td>{expenses[key].description}</Chakra.Td>
                 <Chakra.Td>{expenses[key].category}</Chakra.Td>
-                {/* <Chakra.Td>
+                <Chakra.Td>
                   <Chakra.Text>
                     <DeleteExpense _id={key} />
                   </Chakra.Text>
                 </Chakra.Td>
                 <Chakra.Td>
                   <Chakra.Text>
-                    <EditExpense expense={key} />
+                    <EditExpense _id={key} expense={expenses[key]}/>
                   </Chakra.Text>
-                </Chakra.Td> */}
+                </Chakra.Td>
               </Chakra.Tr>
             ))}
           </Chakra.Tbody>

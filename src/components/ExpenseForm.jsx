@@ -36,7 +36,9 @@ export default function ExpenseForm() {
           isClosable: true,
         });
         setLoading(false);
-        ExpenseCtx.updateExpenseHandler(data);
+        const newExpense = {};
+        newExpense[response.data.name] = data;
+        ExpenseCtx.updateExpenseHandler(newExpense);
       }
     } catch (error) {
       setLoading(false);

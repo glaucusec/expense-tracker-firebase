@@ -6,28 +6,30 @@ export default function ExpensesProvider(props) {
   const [expenses, setExpenses] = useState({});
 
   const updateExpenseHandler = (newExpense) => {
-    console.log(newExpense);
-    setExpenses({ ...expenses, newExpense });
+    setExpenses({ ...expenses, ...newExpense });
   };
 
   const deleteExpenseHandler = (_id) => {
-    const newExpenses = expenses.filter((expense) => expense._id !== _id);
+    const newExpenses = {};
+    Object.keys(expenses).forEach((key) => {
+      if (key !== _id) {
+        newExpenses[key] = expenses[key];
+      }
+    });
     setExpenses(newExpenses);
   };
 
-  const editExpenseHandler = (updatedExpense) => {
-    const updatedExpenses = expenses.map((expense) => {
-      if (expense._id === updatedExpense._id) {
-        // Create a new object with the updated properties
-        return { ...expense, ...updatedExpense };
-      }
-      return expense;
-    });
+  const editExpenseHandler = (key, updatedExpense) => {
+    const newExpenses = { ...expenses };
+    newExpenses[key].amount = updatedExpense.amount;
+    newExpenses[key].description = updatedExpense.description;
+    newExpenses[key].category = updatedExpense.category;
 
-    setExpenses(updatedExpenses);
+    setExpenses(newExpenses);
   };
 
   const setExpenseHandler = (expenses) => {
+    console.log(expenses);
     setExpenses(expenses);
   };
 
