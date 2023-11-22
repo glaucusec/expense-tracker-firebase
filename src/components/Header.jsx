@@ -4,10 +4,12 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function Header() {
   const navigate = useNavigate();
+
   const logoutHandler = (e) => {
     localStorage.removeItem("idToken");
     navigate("/login");
   };
+  
   return (
     <Flex borderBottom={"1px"} pb={"1rem"}>
       <Box>

@@ -1,17 +1,32 @@
-import { useState } from "react";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
-import { Routes, Route } from "react-router-dom";
+import ForgotPassword from "./components/ForgotPassword";
+import { AuthContext } from "./context/AuthContext";
 
 function App() {
+  const AuthCtx = React.useContext(AuthContext);
+  const loggedIn = AuthCtx.idToken !== "";
+
+  const renderElement = () => {
+    if (loggedIn) {
+      return <Route path="/" element={<Navigate to="/home" />} />;
+    } else {
+      return <Route path="/" element={<Navigate to="/login" />} />;
+    }
+  };
+
   return (
     <Routes>
+      {renderElement()}
       <Route path="/signup" element={<SignUp />} />
       <Route path="/login" element={<Login />} />
       <Route path="/home" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>
   );
 }

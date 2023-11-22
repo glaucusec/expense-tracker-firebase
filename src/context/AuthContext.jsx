@@ -15,7 +15,7 @@ export default function AuthProvider(props) {
         AuthStateUpdater(localIdToken);
       }
     })();
-  });
+  }, []);
 
   function AuthStateUpdater(idToken) {
     const newState = { ...state };

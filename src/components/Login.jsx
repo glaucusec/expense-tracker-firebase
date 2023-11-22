@@ -14,6 +14,8 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Link as Clink } from "@chakra-ui/react";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
@@ -97,6 +99,9 @@ export default function Login() {
               </Stack>
             </Stack>
           </form>
+          <Link to={"/forgot-password"}>
+            <Clink>Forgot password ?</Clink>
+          </Link>
         </Box>
       </Stack>
     </Flex>

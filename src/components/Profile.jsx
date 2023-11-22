@@ -77,7 +77,7 @@ export default function Profile() {
       }
     }
     prefillUserData();
-  });
+  }, []);
   return (
     <Box p={4} alignItems={"center"}>
       <Heading size={"md"}>Contact Details</Heading>
