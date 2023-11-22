@@ -1,15 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Box, Flex, Spacer, Heading, Text, Button, Center } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 export default function Header() {
+  const AuthCtx = useContext(AuthContext);
+  const loggedIn = AuthContext.idToken !== "";
   const navigate = useNavigate();
 
   const logoutHandler = (e) => {
     localStorage.removeItem("idToken");
-    navigate("/login");
+    AuthCtx.AuthStateUpdater("");
   };
-  
+
+  if (!loggedIn) {
+    return <Navigate to={"/login"} />;
+  }
+
   return (
     <Flex borderBottom={"1px"} pb={"1rem"}>
       <Box>

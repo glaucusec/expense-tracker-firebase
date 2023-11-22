@@ -10,6 +10,7 @@ import { AuthContext } from "./context/AuthContext";
 function App() {
   const AuthCtx = React.useContext(AuthContext);
   const loggedIn = AuthCtx.idToken !== "";
+  console.log(loggedIn);
 
   const renderElement = () => {
     if (loggedIn) {
@@ -23,8 +24,8 @@ function App() {
     <Routes>
       {renderElement()}
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/home" element={<Home />} />
+      <Route path="/login" element={loggedIn ? <Navigate to="/home" /> : <Login />} />
+      <Route path="/home" element={loggedIn ? <Home /> : <Navigate to="/login" />} />
       <Route path="/profile" element={<Profile />} />
       <Route path="/forgot-password" element={<ForgotPassword />} />
     </Routes>

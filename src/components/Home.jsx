@@ -3,14 +3,15 @@ import { Box, Flex, Spacer, Heading, Text, Button, Center } from "@chakra-ui/rea
 import { Link } from "react-router-dom";
 import VeifyEmail from "./VeifyEmail";
 import Header from "./Header";
+import ExpenseForm from "./ExpenseForm";
 
 export default function Home() {
   return (
     <>
       <Box p={"4"}>
         <Header />
-
         <VeifyEmail />
+        <ExpenseForm />
       </Box>
     </>
   );
