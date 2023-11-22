@@ -2,8 +2,10 @@ import React, { useRef, useContext, useState } from "react";
 import * as Chakra from "@chakra-ui/react";
 import InputField from "./ui/InputField";
 import axios from "axios";
+import { ExpensesContext } from "../context/ExpenseContext";
 
-export default function ExpenseForm({ setShowExpenseFormHandler }) {
+export default function ExpenseForm() {
+  const ExpenseCtx = useContext(ExpensesContext);
   const toast = Chakra.useToast();
   const [loading, setLoading] = useState(false);
 
@@ -14,22 +16,18 @@ export default function ExpenseForm({ setShowExpenseFormHandler }) {
   const submitHandler = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const enteredAmount = amountRef.current.value;
-    const enteredDescription = descRef.current.value;
-    const selectedCategory = categoryRef.current.value;
+    const data = {
+      amount: amountRef.current.value,
+      description: descRef.current.value,
+      category: categoryRef.current.value,
+    };
+
     try {
       const response = await axios.post(
-        ``,
-        {
-          amount: enteredAmount,
-          description: enteredDescription,
-          category: selectedCategory,
-        },
-        {
-          withCredentials: true,
-        }
+        `https://expense-tracker-fire-default-rtdb.firebaseio.com/expenses.json`,
+        data
       );
-      if (response.status == 201) {
+      if (response.status == 200) {
         toast({
           title: "Success",
           description: "Expense created succesfully!",
@@ -38,7 +36,7 @@ export default function ExpenseForm({ setShowExpenseFormHandler }) {
           isClosable: true,
         });
         setLoading(false);
-        updateExpenseHandler(response.data);
+        ExpenseCtx.updateExpenseHandler(data);
       }
     } catch (error) {
       setLoading(false);
