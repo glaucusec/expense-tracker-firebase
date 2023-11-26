@@ -1,16 +1,19 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Box, Flex, Spacer, Heading, Text, Button, Center } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../context/Auth";
 import { Navigate } from "react-router-dom";
 
 export default function Header() {
-  const AuthCtx = useContext(AuthContext);
-  const loggedIn = AuthContext.idToken !== "";
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+  const loggedIn = auth.idToken !== "";
   const navigate = useNavigate();
 
   const logoutHandler = (e) => {
     localStorage.removeItem("idToken");
+    dispatch(authActions.remoteAuth());
     AuthCtx.AuthStateUpdater("");
   };
 

@@ -1,19 +1,19 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import { Icon, useToast, Spinner } from "@chakra-ui/react";
-import { ExpensesContext } from "../context/ExpenseContext";
+
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../context/Expense";
 
 import { AiFillDelete } from "react-icons/ai";
 
 export default function DeleteExpense({ _id }) {
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
-
-  const ExpenseCtx = useContext(ExpensesContext);
 
   const toast = useToast();
 
   const deleteExpense = async (_id) => {
-    console.log(_id)
     setLoading(true);
     try {
       const response = await axios.delete(
@@ -29,7 +29,7 @@ export default function DeleteExpense({ _id }) {
           duration: 5000,
           isClosable: true,
         });
-        ExpenseCtx.deleteExpenseHandler(_id);
+        dispatch(expenseActions.deleteExpense(_id));
         setLoading(false);
       }
     } catch (e) {

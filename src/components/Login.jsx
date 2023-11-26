@@ -10,18 +10,19 @@ import {
   useColorModeValue,
   useToast,
 } from "@chakra-ui/react";
-import { useState, useContext } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Link as Clink } from "@chakra-ui/react";
+import { useDispatch } from "react-redux";
+import { authActions } from "../context/Auth";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export default function Login() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const AuthCtx = useContext(AuthContext);
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,15 +50,16 @@ export default function Login() {
           status: "success",
           title: "You signed up! Please login",
         });
+        console.log(response.data.idToken);
         localStorage.setItem("idToken", response.data.idToken);
-        AuthCtx.AuthStateUpdater(response.data.idToken);
+        dispatch(authActions.updateAuth(response.data.idToken));
         navigate("/home");
       }
     } catch (error) {
       if (error) {
         toast({
           status: "error",
-          title: error.response.data.error.message,
+          title: error.response.data.message,
         });
       }
     }

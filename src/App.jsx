@@ -1,16 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Home from "./components/Home";
 import Profile from "./components/Profile";
 import ForgotPassword from "./components/ForgotPassword";
-import { AuthContext } from "./context/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { authActions } from "./context/Auth";
 
 function App() {
-  const AuthCtx = React.useContext(AuthContext);
-  const loggedIn = AuthCtx.idToken !== "";
-  console.log(loggedIn);
+  const dispatch = useDispatch();
+  // check if logged in or not
+  useEffect(() => {
+    (function () {
+      const localIdToken = localStorage.getItem("idToken");
+      if (localIdToken) {
+        dispatch(authActions.updateAuth(localIdToken));
+        // AuthStateUpdater(localIdToken);
+      }
+    })();
+  }, []);
+
+  const auth = useSelector((state) => state.auth);
+  const loggedIn = auth.idToken !== "";
 
   const renderElement = () => {
     if (loggedIn) {

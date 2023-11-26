@@ -1,15 +1,17 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import * as Chakra from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import InputField from "./ui/InputField";
-import { ExpensesContext } from "../context/ExpenseContext";
 import { FaEdit } from "react-icons/fa";
+
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../context/Expense";
 
 const categories = ["Fuel", "Entertainment", "Beauty/Wellness", "Pets", "Shopping"];
 
 export default function EditExpense({ _id, expense }) {
-  const ExpenseCtx = useContext(ExpensesContext);
+  const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
   const toast = Chakra.useToast();
@@ -44,7 +46,7 @@ export default function EditExpense({ _id, expense }) {
         }
       );
       if (response.status == 200) {
-        ExpenseCtx.editExpenseHandler(_id, response.data);
+        dispatch(expenseActions.editExpense({ key: _id, updatedExpense: response.data }));
         toast({
           title: "Success",
           description: "Expense edited successfully",

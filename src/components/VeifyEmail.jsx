@@ -1,12 +1,12 @@
-import React, { useContext } from "react";
-import { Box, Flex, Spacer, Heading, useToast, Button, Center } from "@chakra-ui/react";
+import React from "react";
+import { Box, Heading, useToast, Button, Center } from "@chakra-ui/react";
 import axios from "axios";
-import { AuthContext } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export default function VeifyEmail() {
-  const AuthCtx = useContext(AuthContext);
+  const auth = useSelector((state) => state.auth);
   const toast = useToast();
   const verifyEmailHandler = async (e) => {
     e.preventDefault();
@@ -15,7 +15,7 @@ export default function VeifyEmail() {
         `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${API_KEY}`,
         {
           requestType: "VERIFY_EMAIL",
-          idToken: AuthCtx.idToken,
+          idToken: auth.idToken,
         }
       );
       if (response.status == 200) {

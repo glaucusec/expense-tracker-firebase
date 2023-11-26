@@ -10,13 +10,13 @@ import {
   Button,
   useToast,
 } from "@chakra-ui/react";
-import { AuthContext } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 
 const API_KEY = import.meta.env.VITE_API_KEY;
 
 export default function Profile() {
+  const auth = useSelector((state) => state.auth);
   const toast = useToast();
-  const AuthCtx = useContext(AuthContext);
   const [name, setName] = useState("");
   const [profileURL, setProfileURL] = useState("");
 
@@ -34,7 +34,7 @@ export default function Profile() {
       const response = await axios.post(
         `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${API_KEY}`,
         {
-          idToken: AuthCtx.idToken,
+          idToken: auth.idToken,
           displayName: nameRef.current.value,
           photoUrl: urlRef.current.value,
         },
@@ -64,7 +64,7 @@ export default function Profile() {
         const response = await axios.post(
           `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
           {
-            idToken: AuthCtx.idToken,
+            idToken: auth.idToken,
           }
         );
         if (response.status == 200) {

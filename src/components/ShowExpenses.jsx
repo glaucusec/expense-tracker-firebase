@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import * as Chakra from "@chakra-ui/react";
-import { ExpensesContext } from "../context/ExpenseContext";
+
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../context/Expense";
 
 import DeleteExpense from "./DeleteExpense";
 import EditExpense from "./EditExpense";
 
 export default function ShowExpenses() {
-  const ExpenseCtx = useContext(ExpensesContext);
-  const expenses = ExpenseCtx.expenses;
+  const expenses = useSelector((state) => state.expenses.expenses);
+  const dispatch = useDispatch();
   const expenseKeys = Object.keys(expenses);
   const toast = Chakra.useToast();
   const [isLoading, setIsLoading] = useState(true);
@@ -21,7 +23,7 @@ export default function ShowExpenses() {
         );
         const receivedExpenses = response.data;
         setIsLoading(false);
-        ExpenseCtx.setExpenseHandler(receivedExpenses == null ? {} : receivedExpenses);
+        dispatch(expenseActions.setExpense(receivedExpenses == null ? {} : receivedExpenses));
       } catch (error) {
         console.log(error);
         setIsLoading(false);
@@ -83,7 +85,7 @@ export default function ShowExpenses() {
                 </Chakra.Td>
                 <Chakra.Td>
                   <Chakra.Text>
-                    <EditExpense _id={key} expense={expenses[key]}/>
+                    <EditExpense _id={key} expense={expenses[key]} />
                   </Chakra.Text>
                 </Chakra.Td>
               </Chakra.Tr>

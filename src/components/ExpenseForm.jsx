@@ -1,11 +1,12 @@
-import React, { useRef, useContext, useState } from "react";
+import React, { useRef, useState } from "react";
 import * as Chakra from "@chakra-ui/react";
 import InputField from "./ui/InputField";
 import axios from "axios";
-import { ExpensesContext } from "../context/ExpenseContext";
+import { useDispatch } from "react-redux";
+import { expenseActions } from "../context/Expense";
 
 export default function ExpenseForm() {
-  const ExpenseCtx = useContext(ExpensesContext);
+  const dispatch = useDispatch();
   const toast = Chakra.useToast();
   const [loading, setLoading] = useState(false);
 
@@ -38,7 +39,8 @@ export default function ExpenseForm() {
         setLoading(false);
         const newExpense = {};
         newExpense[response.data.name] = data;
-        ExpenseCtx.updateExpenseHandler(newExpense);
+        dispatch(expenseActions.updateExpense(newExpense));
+        // ExpenseCtx.updateExpenseHandler(newExpense);
       }
     } catch (error) {
       setLoading(false);
