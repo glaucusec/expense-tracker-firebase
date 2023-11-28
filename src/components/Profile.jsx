@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import {
   Box,
@@ -17,16 +17,8 @@ const API_KEY = import.meta.env.VITE_API_KEY;
 export default function Profile() {
   const auth = useSelector((state) => state.auth);
   const toast = useToast();
-  const [name, setName] = useState("");
-  const [profileURL, setProfileURL] = useState("");
-
-  const nameUpdateHandler = (e) => {
-    setName(e.target.value);
-  };
-
-  const profileUpdateHandler = (e) => {
-    setProfileURL(e.target.value);
-  };
+  const nameRef = useRef();
+  const profileURL = useRef();
 
   const submitHandler = async (e) => {
     e.preventDefault();
@@ -36,7 +28,7 @@ export default function Profile() {
         {
           idToken: auth.idToken,
           displayName: nameRef.current.value,
-          photoUrl: urlRef.current.value,
+          photoUrl: profileURL.current.value,
         },
         {
           "Content-Type": "application/json",
@@ -49,6 +41,7 @@ export default function Profile() {
         });
       }
     } catch (error) {
+      console.log(error);
       if (error) {
         toast({
           status: "error",
@@ -84,11 +77,11 @@ export default function Profile() {
       <Flex pb={"1rem"}>
         <FormControl>
           <FormLabel>Full Name</FormLabel>
-          <Input type="email" value={name} onChange={nameUpdateHandler} />
+          <Input type="email" ref={nameRef} />
         </FormControl>
         <FormControl>
           <FormLabel>Profile Photo URL</FormLabel>
-          <Input type="email" value={profileURL} onChange={profileUpdateHandler} />
+          <Input type="email" ref={profileURL} />
         </FormControl>
       </Flex>
       <Button onClick={submitHandler}>Update</Button>

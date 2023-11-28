@@ -7,6 +7,7 @@ import Profile from "./components/Profile";
 import ForgotPassword from "./components/ForgotPassword";
 import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./context/Auth";
+import axios from "axios";
 
 function App() {
   const dispatch = useDispatch();
