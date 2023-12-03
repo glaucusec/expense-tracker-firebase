@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Icon, useToast, Spinner } from "@chakra-ui/react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../context/Expense";
+import { authActions } from "../context/Auth";
 
 import { AiFillDelete } from "react-icons/ai";
 
 export default function DeleteExpense({ _id }) {
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +19,7 @@ export default function DeleteExpense({ _id }) {
     setLoading(true);
     try {
       const response = await axios.delete(
-        `https://expense-tracker-fire-default-rtdb.firebaseio.com/expenses/${_id}.json`,
+        `https://expense-tracker-fire-default-rtdb.firebaseio.com/${auth.localId}/${_id}.json`,
         {},
         { withCredentials: true }
       );

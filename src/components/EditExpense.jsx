@@ -5,12 +5,13 @@ import { useDisclosure } from "@chakra-ui/react";
 import InputField from "./ui/InputField";
 import { FaEdit } from "react-icons/fa";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../context/Expense";
 
 const categories = ["Fuel", "Entertainment", "Beauty/Wellness", "Pets", "Shopping"];
 
 export default function EditExpense({ _id, expense }) {
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
@@ -38,7 +39,7 @@ export default function EditExpense({ _id, expense }) {
 
     try {
       const response = await axios.put(
-        `https://expense-tracker-fire-default-rtdb.firebaseio.com/expenses/${_id}.json`,
+        `https://expense-tracker-fire-default-rtdb.firebaseio.com/${auth.localId}/${_id}.json`,
         {
           amount: amount,
           description: description,

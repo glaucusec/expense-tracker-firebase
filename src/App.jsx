@@ -9,20 +9,34 @@ import { useDispatch, useSelector } from "react-redux";
 import { authActions } from "./context/Auth";
 import axios from "axios";
 
+const API_KEY = import.meta.env.VITE_API_KEY;
+
 function App() {
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   // check if logged in or not
   useEffect(() => {
-    (function () {
+    (async function () {
       const localIdToken = localStorage.getItem("idToken");
       if (localIdToken) {
         dispatch(authActions.updateAuth(localIdToken));
+        if (auth.idToken) {
+          try {
+            const response = await axios.post(
+              `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${API_KEY}`,
+              { idToken: auth.idToken }
+            );
+            const localId = response.data.users[0].localId;
+            dispatch(authActions.updateUserId(localId));
+          } catch (error) {
+            console.log(error);
+          }
+        }
         // AuthStateUpdater(localIdToken);
       }
     })();
-  }, []);
+  }, [auth.idToken]);
 
-  const auth = useSelector((state) => state.auth);
   const loggedIn = auth.idToken !== "";
 
   const renderElement = () => {

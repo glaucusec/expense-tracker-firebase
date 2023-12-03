@@ -9,6 +9,8 @@ import DeleteExpense from "./DeleteExpense";
 import EditExpense from "./EditExpense";
 
 export default function ShowExpenses() {
+  const auth = useSelector((state) => state.auth);
+  console.log(auth.localId);
   const expenses = useSelector((state) => state.expenses.expenses);
   const dispatch = useDispatch();
   const expenseKeys = Object.keys(expenses);
@@ -17,28 +19,30 @@ export default function ShowExpenses() {
 
   useEffect(() => {
     async function fetchExpenses() {
-      try {
-        const response = await axios.get(
-          "https://expense-tracker-fire-default-rtdb.firebaseio.com/expenses.json"
-        );
-        const receivedExpenses = response.data;
-        setIsLoading(false);
-        dispatch(expenseActions.setExpense(receivedExpenses == null ? {} : receivedExpenses));
-      } catch (error) {
-        console.log(error);
-        setIsLoading(false);
+      if (auth.localId) {
+        try {
+          const response = await axios.get(
+            `https://expense-tracker-fire-default-rtdb.firebaseio.com/${auth.localId}.json`
+          );
+          const receivedExpenses = response.data;
+          setIsLoading(false);
+          dispatch(expenseActions.setExpense(receivedExpenses == null ? {} : receivedExpenses));
+        } catch (error) {
+          console.log(error);
+          setIsLoading(false);
 
-        toast({
-          title: error.response.data.message,
-          description: error.message,
-          status: "error",
-          duration: 9000,
-          isClosable: true,
-        });
+          toast({
+            title: error.response.data.message,
+            description: error.message,
+            status: "error",
+            duration: 9000,
+            isClosable: true,
+          });
+        }
       }
     }
     fetchExpenses();
-  }, []);
+  }, [auth.localId]);
 
   if (isLoading) {
     return (

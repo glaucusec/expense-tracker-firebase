@@ -2,10 +2,12 @@ import React, { useRef, useState } from "react";
 import * as Chakra from "@chakra-ui/react";
 import InputField from "./ui/InputField";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { expenseActions } from "../context/Expense";
+import { authActions } from "../context/Auth";
 
 export default function ExpenseForm() {
+  const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const toast = Chakra.useToast();
   const [loading, setLoading] = useState(false);
@@ -25,7 +27,7 @@ export default function ExpenseForm() {
 
     try {
       const response = await axios.post(
-        `https://expense-tracker-fire-default-rtdb.firebaseio.com/expenses.json`,
+        `https://expense-tracker-fire-default-rtdb.firebaseio.com/${auth.localId}.json`,
         data
       );
       if (response.status == 200) {
